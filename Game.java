@@ -18,7 +18,7 @@ public class Game {
 		String choix;
 		
 		do {
-			choix = JOptionPane.showInputDialog(texte);
+			choix = JOptionPane.showInputDialog(null,texte, "Démineur", JOptionPane.INFORMATION_MESSAGE);
 			if(choix == null) 
 				break;
 			try {
@@ -53,7 +53,7 @@ public class Game {
 			System.exit(0);
 		}
 		
-		new MinesweeperGame(nbLignes, nbColonnes, nbBombes, TAILLE);
+		new MinesweeperGame(nbLignes, nbColonnes, nbBombes, TAILLE, difficulty);
 
 	}
 

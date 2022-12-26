@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 public class MinesweeperGame extends JFrame {
 
@@ -29,7 +30,8 @@ public class MinesweeperGame extends JFrame {
 	int NBCOL;
 	int TAILLE;
 	int NBBOMB;
-
+	int difficulty;
+	
 	boolean win = false;
 	boolean gameOver = false;
 
@@ -37,11 +39,14 @@ public class MinesweeperGame extends JFrame {
 	JButton exitBtn;
 	JLabel labelImage;
 	JLabel chronoLabel;
-	public MinesweeperGame(int ligne, int col, int nbBomb, int TAILLE) {
+	int sec, min, heure;
+	Timer timer;
+	public MinesweeperGame(int ligne, int col, int nbBomb, int TAILLE, int difficulty) {
 		this.NBLIG = ligne;
 		this.NBCOL = col;
 		this.NBBOMB = nbBomb;
 		this.TAILLE = TAILLE;
+		this.difficulty = difficulty;
 		this.setSize(new Dimension((col + 5) * TAILLE + 100, (ligne + 5) * TAILLE));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
@@ -151,7 +156,7 @@ public class MinesweeperGame extends JFrame {
 		// panel indiquant le nombre des bombes
 		JPanel panelBombe = new JPanel();
 		panelBombe.setLayout(null);
-		panelBombe.setBounds((col + 2) * TAILLE, 120, 150, 80);
+		panelBombe.setBounds((col + 2) * TAILLE, 110, 150, 80);
 
 		JLabel bombeImg = new JLabel();
 		bombeImg.setBounds(30, 0, 120, 80);
@@ -161,14 +166,50 @@ public class MinesweeperGame extends JFrame {
 
 		JLabel nbBombesLabel = new JLabel();
 		nbBombesLabel.setText(String.valueOf(NBBOMB));
+		nbBombesLabel.setFont(new Font("Serif", Font.BOLD, 22));
 		nbBombesLabel.setBounds(30, 0, 30, 80);
 
 		panelBombe.setBackground(Color.decode("#F1E3DA"));
 		panelBombe.add(bombeImg);
 		panelBombe.add(nbBombesLabel);
 		// Chrono
-		chronoLabel = new JLabel();
+		chronoLabel = new JLabel("00:00:00");
+		chronoLabel.setForeground(Color.decode("#216262"));
+		chronoLabel.setFont(new Font("Serif", Font.BOLD, 26));
+		// affichage du chrono en fonction de la difficulté:
+		if(difficulty == 2)
+			chronoLabel.setBounds((col + 1) * TAILLE + 30, (col - 4) * TAILLE, 100, 50);
+		else if(difficulty == 1)
+			chronoLabel.setBounds((col + 1) * TAILLE + 30, (col +1) * TAILLE, 100, 50);
+		else
+			chronoLabel.setBounds((col + 1) * TAILLE + 30, (col - 6) * TAILLE, 100, 50);
+		// action comment incrémenter le temps:
+		timer = new Timer(1000, new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(!gameOver) {
+					String strSec, strMin, strH;
+					sec++;
+					if(sec == 60) {
+						sec = 0;
+						min++;
+					}
+					if(min == 60) {
+						min = 0;
+						heure++;
+					}
+					strSec = sec < 10 ? "0"+sec : String.valueOf(sec);
+					strMin = min < 10 ? "0"+min : String.valueOf(min);
+					strH = heure < 10 ? "0"+heure : String.valueOf(heure);
+					chronoLabel.setText(strH+":"+strMin+":"+strSec);
+					repaint();
+				}
+			}
+		});
+		timer.start();
 		// add elements
+		this.add(chronoLabel);
 		this.add(panelBombe);
 		this.add(labelImage);
 		this.add(exitBtn);
@@ -250,8 +291,10 @@ public class MinesweeperGame extends JFrame {
 				if (grCouv[l][c] != 0)
 					nbCouv++;
 
-		if (nbCouv == NBBOMB)
+		if (nbCouv == NBBOMB) {
 			win = true;
+			timer.stop();
+		}
 	}
 
 }
