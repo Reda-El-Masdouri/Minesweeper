@@ -1,7 +1,11 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Toolkit;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 public class MinesweeperPanel extends JPanel{
@@ -39,8 +43,13 @@ public class MinesweeperPanel extends JPanel{
 					g.setColor(Color.decode("#C09C83"));
 					g.fillRect(l*game.TAILLE, c*game.TAILLE, game.TAILLE, game.TAILLE);
 					if(game.grCouv[l][c] == 2) {
+						Toolkit toolkit = Toolkit.getDefaultToolkit();
+				        Graphics2D g2d = (Graphics2D) g;
+
+				        Image img = toolkit.getImage("flag.png");
+				        g2d.drawImage(img, l*game.TAILLE, c*game.TAILLE, null);
 						g.setColor(Color.black);
-						g.drawString("X", l*game.TAILLE, (c+1)*game.TAILLE-game.TAILLE/2);
+						//g.drawString("X", l*game.TAILLE, (c+1)*game.TAILLE-game.TAILLE/2);
 					}
 				}
 				
@@ -57,7 +66,9 @@ public class MinesweeperPanel extends JPanel{
 			g.setFont(new Font("TimesRoman", Font.BOLD, 32));
 			g.drawString("Victory", (this.getWidth() / 2) - ("Victory".length()/2) -50, (this.getHeight() / 2));
 		}
+		game.nbBombesLabel.setText(String.valueOf(game.NBBOMB - game.calculateFlags()));
 	}
+	
 	
 	public MinesweeperGame getGame() {
 		return game;

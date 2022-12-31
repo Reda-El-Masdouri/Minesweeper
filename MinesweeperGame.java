@@ -39,6 +39,7 @@ public class MinesweeperGame extends JFrame {
 	JButton exitBtn;
 	JLabel labelImage;
 	JLabel chronoLabel;
+	JLabel nbBombesLabel;
 	int sec, min, heure;
 	Timer timer;
 	public MinesweeperGame(int ligne, int col, int nbBomb, int TAILLE, int difficulty) {
@@ -150,7 +151,7 @@ public class MinesweeperGame extends JFrame {
 		// démineur image
 		labelImage = new JLabel();
 		labelImage.setBounds((col + 2) * TAILLE, TAILLE / 2, 150, 100);
-		ImageIcon imageIcon = new ImageIcon(new ImageIcon("img.png").getImage().getScaledInstance(labelImage.getWidth(),
+		ImageIcon imageIcon = new ImageIcon(new ImageIcon(Game.class.getResource("img.png")).getImage().getScaledInstance(labelImage.getWidth(),
 				labelImage.getHeight(), Image.SCALE_SMOOTH));
 		labelImage.setIcon(imageIcon);
 		// panel indiquant le nombre des bombes
@@ -160,11 +161,11 @@ public class MinesweeperGame extends JFrame {
 
 		JLabel bombeImg = new JLabel();
 		bombeImg.setBounds(30, 0, 120, 80);
-		ImageIcon imageBombe = new ImageIcon(new ImageIcon("bombe.png").getImage()
+		ImageIcon imageBombe = new ImageIcon(new ImageIcon(Game.class.getResource("bombe.png")).getImage()
 				.getScaledInstance(bombeImg.getWidth(), bombeImg.getHeight(), Image.SCALE_SMOOTH));
 		bombeImg.setIcon(imageBombe);
 
-		JLabel nbBombesLabel = new JLabel();
+		nbBombesLabel = new JLabel();
 		nbBombesLabel.setText(String.valueOf(NBBOMB));
 		nbBombesLabel.setFont(new Font("Serif", Font.BOLD, 22));
 		nbBombesLabel.setBounds(30, 0, 30, 80);
@@ -295,6 +296,15 @@ public class MinesweeperGame extends JFrame {
 			win = true;
 			timer.stop();
 		}
+	}
+	
+	public int calculateFlags() {
+		int nbFlags = 0;
+		for (int l = 0; l < NBLIG; l++)
+			for (int c = 0; c < NBCOL; c++)
+				if (grCouv[l][c] == 2)
+					nbFlags++;
+		return nbFlags;
 	}
 
 }
